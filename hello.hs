@@ -130,3 +130,15 @@ quicksort (x:xs) =
     in  smallerSorted ++ [x] ++ biggerSorted  
 
 -- end of recursion chapter
+
+describeList :: [a] -> String
+describeList xs = "The list is " ++ case xs of [] -> "Empty"
+                                               [x] -> "Singleton list"
+                                               [xs] -> "A longer list"
+
+isUpperAlphanum :: Char -> Bool
+isUpperAlphanum = (`elem` ['A'..'Z'])
+
+flip' :: (a -> b -> c) -> (b -> a -> c)
+flip' f = g
+  where g x y = f y x
