@@ -1,4 +1,6 @@
- main = do
+import qualified Data.Set as Set
+
+main = do
   print "my first haskell program"
   name <- getLine
   print ("Hello, " ++ name)
@@ -102,39 +104,6 @@ describeList :: [a] -> String
 describeList xs = "The list is " ++ case xs of [] -> "Empty"
                                                [x] -> "Singleton list"
                                                [xs] -> "A longer list"
--- end of syntax in functions chapter (should've added this comment for the previous chapter but I'm lazy)
-maximum' :: (Ord a) => [a] -> a
-maximum' [] = error "empty list, no max value"
-maximum' [x] = x
-maximum' (x:xs)
-  | x > maxTail = x
-  | otherwise = maxTail
-  where maxTail maximum' xs
-
-take' :: (Num i, Ord i) => i -> [a] -> [a]
-take' n _
-  | n <= 0 = []
-take' _ [] = []
-take' n (x:xs) = x:take' (n-1) xs
-
-zip' :: [a] -> [b] -> [(a,b)]
-zip' [] _ = []
-zip' _ [] = []
-zip' (x:xs) (y:ys) = (x:y):zip' xs ys
-
-quicksort :: (Ord a) => [a] -> [a]  
-quicksort [] = []  
-quicksort (x:xs) =   
-    let smallerSorted = quicksort [a | a <- xs, a <= x]  
-        biggerSorted = quicksort [a | a <- xs, a > x]  
-    in  smallerSorted ++ [x] ++ biggerSorted  
-
--- end of recursion chapter
-
-describeList :: [a] -> String
-describeList xs = "The list is " ++ case xs of [] -> "Empty"
-                                               [x] -> "Singleton list"
-                                               [xs] -> "A longer list"
 
 isUpperAlphanum :: Char -> Bool
 isUpperAlphanum = (`elem` ['A'..'Z'])
@@ -143,7 +112,7 @@ flip' :: (a -> b -> c) -> (b -> a -> c)
 flip' f = g
   where g x y = f y x
 
- largestDivisible :: (Integral a) => a
+largestDivisible :: (Integral a) => a
 largestDivisible = head (filter p [100000, 99999..])
   where p x = x `mod` 3829 == 0 
 
@@ -163,4 +132,59 @@ sumByFolding xs = foldl(\a b -> a + b) 0 xs
 --rightFoldMap :: (a -> b) -> [a] -> [b]
 --rightFoldMap f xs = (\x acc -> f x: acc ) [] xs
 
+type PhoneNumber = String
+type Name = String
+phonebook :: [(Name, PhoneNumber)]
+phonebook = [("jim","123 456 7890"),
+             ("bob", "444 111 3450"),
+             ("dylan", "559 867 5309")]
 
+findKey :: (Eq k) => k -> [(k,v)] -> Maybe v
+findKey key [] = Nothing
+findKey key ((k,v):xs) = if key == k
+  then Just v
+  else findKey key xs
+
+data Shape = Circle Float Float Float | Rectangle Float Float Float Float deriving (Show)
+
+surface :: Shape -> Float
+surface (Circle _ _ r) = pi * r ^ 2
+surface (Rectangle x1 y1 x2 y2) = (abs $ x2 - x1) * (abs $ y2 - y1)
+
+data Point = Point Float Float deriving (Show)
+
+data Person = Person String String Int deriving (Show, Eq, Read)
+
+firstName :: Person -> String
+firstName (Person firstname _ _) = firstname
+
+lastName :: Person -> String
+lastName (Person _ lastname _) = lastname
+
+age :: Person -> Int
+age (Person _ _ age) = age
+
+data Car = Car {
+  company :: String,
+  model :: String,
+  year :: Int
+} deriving (Show)
+
+data Boat a b c = Boat {
+  boatCompany :: a,
+  boatModel :: b,
+  boatYear :: c 
+} deriving (Show)
+
+data Vector a = Vector a a a deriving (Show)
+
+vplus :: (Num t) => Vector t -> Vector t -> Vector t
+(Vector i j k) `vplus` (Vector l m n) = Vector (i + l) (j + m) (k + n)
+
+vectMult :: (Num t) => Vector t -> t -> Vector t
+(Vector i j k) `vectMult` m = Vector (i * m) (j * m) (k * m)
+
+data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
+  deriving (Eq, Ord, Show, Read, Bounded, Enum)
+
+type AssocList k v = [(k,v)]
