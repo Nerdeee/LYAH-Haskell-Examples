@@ -188,3 +188,69 @@ data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday
   deriving (Eq, Ord, Show, Read, Bounded, Enum)
 
 type AssocList k v = [(k,v)]
+
+data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)
+
+data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Eq, Read)
+
+singleton :: a -> Tree a
+singleton x = Node x EmptyTree EmptyTree
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = singleton x
+treeInsert x (Node a left right)
+  | x == a = Node x left right
+  | x < a = Node a (treeInsert x left) right
+  | x > a = Node a left (treeInsert x right)
+
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem x EmptyTree = False
+treeElem x (Node a left right)
+ | x == a = True
+ | x < a = treeElem x left
+ | x > a = treeElem x right
+
+data TrafficLight = Red | Yellow | Green
+
+instance Eq TrafficLight where
+  Red == Red = True
+  Green == Green = True
+  Yellow == Yellow = True
+  _ == _ = False
+
+instance Show TrafficLight where
+  show Red = "Red Light"
+  show Yellow = "Yellow Light"
+  show Green = "Green Light"
+
+class YesNo a where
+  yesno :: a -> Bool
+
+instance YesNo Int where
+  yesno 0 = False
+  yesno _ = True
+
+instance YesNo [a] where
+  yesno [] = False
+  yesno _ = True
+
+instance YesNo Bool where
+  yesno = id
+
+instance YesNo (Maybe a) where
+  yesno (Just _) = True
+  yesno Nothing = False
+
+instance YesNo (Tree a) where
+  yesno EmptyTree = False
+  yesno _ = True
+
+instance YesNo TrafficLight where
+  yesno Red = False
+  yesno _ = True
+
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+
+class Tofu t where
+  tofu :: j a -> t a j
