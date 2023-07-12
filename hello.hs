@@ -1,9 +1,7 @@
 import qualified Data.Set as Set
+import Data.Char
+import COntrol.Monad
 
-main = do
-  print "my first haskell program"
-  name <- getLine
-  print ("Hello, " ++ name)
 f x y = x + y
 
 doubleMe x = x * 2
@@ -254,3 +252,46 @@ class Functor f where
 
 class Tofu t where
   tofu :: j a -> t a j
+  
+main = do
+  putStrLn "Hello what's your first name?"
+  firstName <- getLine
+  putStrLn "What is your last name?"
+  lastName <- getLine
+    let bigFirstName = map toUpper firstName
+        bigLastName = map toUpper lastName
+   putStrLn $ "Hey " ++ firstName ++ " " ++ lastName ++ ", how are you?"
+   
+  putStr "Hey, "
+  putStr "I'm, "
+  putStrLn "Andy!"
+  
+  putChar 't'
+  putChar 'h'
+  putChar 'e'
+  
+  print True
+  print [3,4,5]
+  
+  putStrLn "hello agent "
+  print 47
+  
+  
+  rs <- sequence [getLIne, getLIne, getLIne]
+  print rs
+ 
+  sequence (map print [1,2,3,4])
+ 
+  putStrLn "Give me some input: "
+  l <- getLIne
+  putStrLn $ map toUpper l
+ 
+  colors <- form [1,2,3,4] (\a -> do
+    putStrLn $ "Which color do you associate with the number " ++ show a ++ "?"
+    color <- getLIne
+    return color)
+  putStrLn "The colors you associate with 1, 2, 3, and 4 are..." 
+  mapM putStrLn colors
+  
+  contents <- getContents
+  putStr (map toUpper contents)
