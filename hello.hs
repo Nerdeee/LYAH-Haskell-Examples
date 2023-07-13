@@ -1,6 +1,8 @@
 import qualified Data.Set as Set
 import Data.Char
 import COntrol.Monad
+import System.Random
+import Data.Bytestring
 
 f x y = x + y
 
@@ -295,3 +297,41 @@ main = do
   
   contents <- getContents
   putStr (map toUpper contents)
+  
+  args <- getArgs
+  progName <- getProgName
+  putStrLn "The arguments are: "
+  mapM putStrLn args
+  
+  putStrLn "The program name is: "
+  mapM putStrLn progName
+  
+  putStrLn "Enter a number for random generation"
+  getNand <- getStdGen
+  putStr $ take 20 (randomRs ('a', 'z') gen)
+  
+  gen <- getStdGen
+  let randomChars = randomRs ('a', 'z') gen
+    (first20, rest) = splitAt 20 randomChars
+    (second20, _) = splitAt 20, rest
+  putStr first20
+  putStr second20
+  
+  generate <- getStdGen
+  let (randNUmber, _) = randomR (1, 10) gen :: (Int, StdGen)
+  putStr "Which number in the range of 1 to 10 am I thikning of? "
+  numberString <- getLIne
+  when (not $ null numberString) $ do
+    let number = read numberString
+    if randNumber == number
+      then putStrLn "You are correct!"
+      else putStrLn $ "Sorry, it was " ++ show randNUmber
+    newStdGen
+    main
+    
+  solveRPN :: (Num a, Read a) => String -> a
+  solveRPN = head . foldl foldingFunction [] . words
+    where foldingFunction (x:y:ys) "*" = (x * y):ys
+    	  foldingFUnction (x:y:ys) "+" = (x + y):ys
+    	  foldingFunction (x:y:ys) "-" = (x - y):ys
+    	  foldingFunction xs numberString = read numberString:xs
